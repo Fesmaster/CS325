@@ -171,6 +171,9 @@ class AlchemistScene extends Phaser.Scene {
         
         //update the progressbars
         for (var i=0;i<4;i++){
+            if (this.percents_tv[i] > 1){this.percents_tv[i] = 1;}
+            if (this.percents_tv[i] < 0){this.percents_tv[i] = 0;}
+            
             var diff = this.percents[i] - this.percents_tv[i]
             if (diff != 0){
                 
@@ -199,6 +202,7 @@ class AlchemistScene extends Phaser.Scene {
         this.fluid.setTint(this.fluid_color);
         
         //update the fill bar
+        if (this.FillPercent_tv < 0){this.FillPercent_tv = 0;}
         var Filldiff = this.FillPercent - this.FillPercent_tv;
         if (Filldiff != 0){
             if (Math.abs(Filldiff) < this.ProgressBarSpeed){
@@ -210,7 +214,6 @@ class AlchemistScene extends Phaser.Scene {
                     this.FillPercent -= this.ProgressBarSpeed;
                 }
             }
-            if (this.FillPercent > 1){this.FillPercent = 1;}
             if (this.FillPercent < 0){this.FillPercent = 0;}
         }
         UpdateProgressBarV(this.FillBar, 285, 50, 50, 250, this.FillPercent, 8, this.fluid_color, 0xDDDDDD);
