@@ -63,6 +63,12 @@ function CheckTargetDev(check, target, dev){
     return check >= target - (dev/2) && check <= target + (dev/2)
 }
 
+function lerp(a, b, alpha){
+    if (alpha > 1){alpha = 1;}
+    if (alpha < 0){alpha = 0;}
+    return a*alpha + b * (1-alpha)
+}
+
 class AlchemistScene extends Phaser.Scene {
     
     constructor() {
@@ -70,21 +76,26 @@ class AlchemistScene extends Phaser.Scene {
         //this.graphics = null;
         
         this.Buttons = [];
+        this.ButtonItems = [];
         
         this.ProgressBars = [];
         this.TargetBars = [];
         this.percents = [];
         this.percents_tv = [];
         
-        this.targets = [0.25, 0.5, 0.75, 0.33];
-        this.target_dev = [0.1, 0.03, 0.05, 0.09];
+        this.targets = [];
+        this.target_dev = [];
+        for(var i=0;i<4;i++){
+            this.targets[i] = lerp(0.25, 0.75, Math.random());
+            this.target_dev[i] = lerp(0.05, 0.125, Math.random());
+        }
         this.barLableList = ["Color", "Smell", "Acidity", "Viscosity"];
         
         
         this.FillBar = null;
         this.FillPercent = 0.0;
         this.FillPercent_tv = 0.0;
-        this.FillPerClick = 0.02;
+        this.FillPerClick = 0.01;
         
         this.fluid = null;
         this.fluid_color = 0x76E7FF;
@@ -92,11 +103,52 @@ class AlchemistScene extends Phaser.Scene {
         this.ProgressBarSpeed = 0.005;
         
         this.inputEnabled = true;
+        
+        this.Items = [
+            //affects one
+            {img: "item_00", 0: 1, 1: 0, 2: 0, 3: 0},
+            {img: "item_01", 0: 0, 1: 0, 2: 0, 3: 1},
+            {img: "item_02", 0: 0, 1: 1, 2: 0, 3: 0},
+            {img: "item_03", 0: 0, 1: 0, 2: 1, 3: 0},
+            //affects two
+            {img: "item_04", 0: 1, 1: -1, 2: 0, 3: 0},
+            {img: "item_05", 0: 0, 1: 0, 2: 1, 3: -1},
+            {img: "item_06", 0: 0, 1: 1, 2: -1, 3: 0},
+            {img: "item_07", 0: -1, 1: 0, 2: 0, 3: 1},
+            //affects three
+            {img: "item_08", 0: 0, 1: -1, 2: -1, 3: 2},
+            {img: "item_09", 0: -1, 1: -1, 2: 2, 3: 0},
+            {img: "item_10", 0: 2, 1: 0, 2: -1, 3: -1},
+            {img: "item_11", 0: -1, 1: 2, 2: 0, 3: -1},
+        ]
+    }
+    
+    setButtonAttrib(id){
+        if (id < 0 || id > 3){return;}
+        var rand = -1;
+        var check = false
+        while(!check){
+            rand = Math.floor(Math.random()*this.Items.length);
+            check = true;
+            for (var i=0;i<4;i++){
+                if (this.ButtonItems[i] == rand){ //includes this current button, so no unchanging items
+                    check = false;
+                    continue;
+                }
+            }
+        }
+        this.Buttons[id].setTexture(this.Items[rand].img);
+        this.ButtonItems[id] = rand;
     }
     
     preload() {
         this.load.image("cauldron", "assets/Cauldron.png")
         this.load.image("fluid", "assets/Cauldron_Fluid.png")
+        
+        //load all the item images
+        for(var i=0;i<this.Items.length;i++){
+            this.load.image(this.Items[i].img, "assets/"+this.Items[i].img+".png")
+        }
     }
     
     buttonPress(index){
@@ -104,7 +156,11 @@ class AlchemistScene extends Phaser.Scene {
         if (!this.inputEnabled){return;}
         
         //get the item in the button, and modify the four bars to show it's changes
-        this.percents_tv[index] += 0.05;
+        //this.ButtonItems[index]
+        for(var i = 0;i<4;i++){
+            this.percents_tv[i] += 0.05 * this.Items[this.ButtonItems[index]][i];
+        }
+        
         
         //increase the fill on the fill percent bar
         this.FillPercent_tv += this.FillPerClick;
@@ -114,17 +170,22 @@ class AlchemistScene extends Phaser.Scene {
         
         //add the buttons
         for (var i = 0; i<4;i++){
-            var b = this.add.rectangle(125 + i*175, 475, 100, 100, 0x0077FF);
+            var b = this.add.image(125 + i*175, 475, this.Items[0].img);
+            //this.ButtonItems[i] = i;
+            //(125 + i*175, 475, 100, 100, 0x0077FF);
+            b.setScale(3.125);
             b.setInteractive();
             b.buttonIndex = i;
-            b.on("pointerover", function(){this.setScale(1.1);});
-            b.on("pointerout", function(){this.setScale(1.0);});
-            b.on("pointerup", function(){this.setScale(1.1);});
+            b.on("pointerover", function(){this.setScale(3.225);});
+            b.on("pointerout", function(){this.setScale(3.125);});
+            b.on("pointerup", function(){this.setScale(3.225);});
             b.on("pointerdown", function(){
-                this.setScale(0.9);
+                this.setScale(3.025);
                 this.scene.buttonPress(this.buttonIndex);
+                this.scene.setButtonAttrib(this.buttonIndex);
             });
             this.Buttons[i] = b;
+            this.setButtonAttrib(i);
         }
         
         //add the progressbars
@@ -250,6 +311,7 @@ const game = new Phaser.Game({
     width: 800,
     height: 600,
     scene: AlchemistScene,
+    pixelArt: true,
     physics: { 
         default: 'matter',
         matter: {
