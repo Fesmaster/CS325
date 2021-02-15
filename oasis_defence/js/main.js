@@ -792,6 +792,7 @@ class MyScene extends Phaser.Scene {
     loose(){
         this.gameActive = false;
         this.add.text(25, 5, "You Have Lost!", {color: "#000", fontSize: "128px"});
+        alert("You Have Lost!");
     }
     
     SelectedPos(){
