@@ -556,8 +556,8 @@ class MyScene extends Phaser.Scene {
         
         this.resource_text = this.add.text(
             TILE_SIZE * PLAY_WIDTH + BORDER_SIZE*2 + 20, 
-            60, 
-            "Res:"+this.resource.toString()
+            10, 
+            "Resource:"+this.resource.toString()
         );
         
         this.btn_add = new Button(this, "add", 70,  120,  3.125, "button_add");
