@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Hello! Amaze!</title>
+<style>
+body
+{
+    color: #777;
+    font-family: "Avenir", Verdana, sans-serif;
+}
+#readme
+{
+    margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+<div id="game"></div>
+<div id="readme">
+<h2>Your game title</h2>
+
+<ul>
+<li><strong>Originality:</strong>
+Q: What is original about your game?<br>
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
+A: Much! Again, I started from scratch, removing all the code from a copy of Digital Assignment 0, leaving the class, empty functions in it, and its creation. For the style of game, it is a tower defence with a few changes, as I don't like tower defence games, and I wanted to make somthing more fun. The changes are that the enemies will attack the towers and destroy them, and that towers can be upgraded, trading space for health and damage. 
+This leads to some interesting strategies not found in other tower defence games, that can be rather interesting to play with.
+</li>
+
+<li><strong>Technical Merit:</strong>
+Q: What is interesting about your game technology?<br>
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
+A: Again, Much! As I built this from scratch, I had a lot of problems to solve. One was a way to neatly package the towers and all their data. I thought about making a custom sprite class, (inheriting from a Phaser class), but that seemed unnesicarily complex. Instead, I just made a few base classes, and used the idea that creating a new class results in a completely malliable javascript object to ignore inheritence. There are essentally 3 "types" of turrets, the actual turret, the oasis, and a "turret part" that forms invisible parts of larger upgraded turrets. This allows them to be attacked in a more realistic way, as well as blocking "turret stacking" where more than one upgraded turret overlaps, allowing them to be too densly packed. 
+<br>The whole upgrading/downgrading thing was a real challenge, as I had to balance checking for the ability to do it, as well as how it effected the resources. Correctly assimilating smaller turrets was a challenge.
+</li>
+
+<li><strong>Prototype Postmortem:</strong>
+Q: What did you learn from this prototype?
+What was the easiest or hardest part of making it? <br>
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
+A: The hardest part was the upgrading of the turrets. Downgrading was easy, once the system was in place. As I mentioned above, there were a host of diffuculties, including:
+<ul>
+<li>Checking if the turret could be upgraded, based on the nearby turrets</li>
+<li>Dealing with destroying the assimilated turrets neatly, and replacing them with turret parts</li>
+<li>Managing how this affected resources (ie, a level 2 turret destroyed should return 4x the resources of a level 1 turret.)</li>
+<li>Balanceing the larget turrets to be strong enough that they are worth making. A level 3 turret can 1-shot all of the enemies, but that does not matter much when there are thousands of them.</li>
+</ul>
+</li>
+
+<li><strong>Prototype Assets:</strong>
+Q: Did you make your prototype assets from scratch? Did you borrow them? Cite your sources here.
+<ul>
+<li>All Images: These were made from scratch.</li>
+<li>Laser_Blast.wav. This was modifed from a sound sourced from SoundBible, <a href="https://soundbible.com/1802-Alien-Machine-Gun.html">https://soundbible.com/1802-Alien-Machine-Gun.html</a>, licensed under Atrribution 3.0.</li>
+</ul>
+</li>
+
+<li><strong>Prototype Closest Other Game:</strong>
+Q: Which other game most closely resembles your game? If you are borrowing code from a Phaser Example, you must say so here. If you borrow code from elsewhere, you must say so here.<br>
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
+A: I built this game from scratch, and did not even reference any templates as I did so. I just used the documentation.
+</li>
+
+<li><strong>High Concept:</strong>
+Defend the Oasis from invading enemies by building and upgrading turrets.
+</li>
+
+<li><strong>Theme:</strong>
+Oasis
+</li>
+
+<li><strong>Mandated Variety:</strong>
+<ul>
+<li>Input: Mouse, Clickable Buttons</li>
+<li>Randomness: deterministic.</li>
+<li>Play Styles: Director/Craftsman</li>
+<li>Genre: Tower Defence</li>
+</ul>
+</li>
+
+<li><strong>Prototype Goal:</strong>
+I have never built a tower defence game before, and I don't like the genere, I was trying to see if I could make one I liked enough to play for fun. To some extent, I suceeeded. However, due to limited time, there are a handful of features I would like to add that would make it actually suceed. 
+</li>
+
+<li><strong>Player Experience Goals:</strong>
+Again, this was to see if I could have fun on this genre. It was designed to be more of a fast-pased strategy game, as you have limited influence over where the enemy attack. However, you don't have a lot of time to plan.
+</li>
+
+<li><strong>Gameplay:</strong>
+You can click the buttons to choose to add, remove, upgrade or downgrade turrets, and then perform that action on the play field. However, you have a resource that is consumed and restored by building and destroying turrets respectively. But make desicions fast, as another wave of enemies is there in ten seconds!
+</li>
+
+<li><strong>Strategies:</strong>
+There are a few interesting strategies that can be used. The first is to box the enemy in, forcing them to fight their way through the turrets, which are shooting them down. However, they will eventually overwelm this no matter what as they grow in numbers exponentally each wave.
+<br>Another strategy to use is to control which turrets they attack (little ones) and have Big ones shoot at them from a distance, forcing them to take a long and winding route.
+</li>
+
+<li><strong>Story/Setting/Premise:</strong>
+You are in posession of a source of water, but raders want it! Defend your water!
+</li>
+
+<li><strong>Target Audience:</strong>
+Me, actually. I wanted to see if I could build a Tower Defence game I enjoyed playing.
+</li>
+
+<li><strong>Play Time:</strong>
+However long you can keep winning for. There is no win condition.
+</li>
+
+</ul>
+</div>
+
+<!-- main.js must come at the end since it expects the HTML to have been created. -->
+<script src="js/main.js" type="module"></script>
+</body>
+</html>
