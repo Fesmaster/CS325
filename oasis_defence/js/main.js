@@ -554,11 +554,7 @@ class MyScene extends Phaser.Scene {
         
         new OasisTurret(this, Math.floor(PLAY_WIDTH/2),Math.floor(PLAY_HEIGHT/2))
         
-        this.resource_text = this.add.text(
-            TILE_SIZE * PLAY_WIDTH + BORDER_SIZE*2 + 20, 
-            10, 
-            "Resource:"+this.resource.toString()
-        );
+        this.resource_text = this.add.text((TILE_SIZE * PLAY_WIDTH + BORDER_SIZE*2 + 20), 1 "Resource:"+this.resource.toString());
         
         this.btn_add = new Button(this, "add", 70,  120,  3.125, "button_add");
         this.btn_del = new Button(this, "del", 230, 120,  3.125, "button_remove");
@@ -791,7 +787,7 @@ class MyScene extends Phaser.Scene {
     
     loose(){
         this.gameActive = false;
-        this.add.text(25, 150, "You Have Lost!", {color: "#000", fontSize: "128px"});
+        this.add.text(25, 5, "You Have Lost!", {color: "#000", fontSize: "128px"});
     }
     
     SelectedPos(){
