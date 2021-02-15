@@ -556,7 +556,7 @@ class MyScene extends Phaser.Scene {
         
         this.resource_text = this.add.text(
             (TILE_SIZE * PLAY_WIDTH + BORDER_SIZE*2 + 20),
-            -10,
+            -20,
             "Resource:"+this.resource.toString()
         );
         
