@@ -374,6 +374,7 @@ class OasisTurret{
             this.scene.turrets[this.loc.y][this.loc.x] = null;
             this.destroy();
             //loose the game!
+            this.scene.loose();
         }
     }
     canlevelup(){
@@ -520,6 +521,7 @@ class MyScene extends Phaser.Scene {
         this.enemies.length = 0;
         
         this.restartedSound = false;
+        this.gameActive = true;
     }
     
     preload() {
@@ -583,6 +585,8 @@ class MyScene extends Phaser.Scene {
     }
     
     buttonPress(bID){
+        if (!this.gameActive){return;}
+        
         if (!this.restartedSound){
             this.sound.context.resume();
             this.restartedSound = true;
@@ -646,6 +650,8 @@ class MyScene extends Phaser.Scene {
     }
     
     mousePress(loc){
+        if (!this.gameActive){return;}
+        
         //console.log(""+ loc.x + ","+loc.y);
         if (!this.restartedSound){
             this.sound.context.resume();
@@ -684,7 +690,7 @@ class MyScene extends Phaser.Scene {
         this.selectBox.clear();
         //this.turret_graphics.clear();
         
-        this.resource_text.setText("Res:"+this.resource.toString());
+        this.resource_text.setText("Resource:"+this.resource.toString());
         
         //draw the background
         this.background.fillStyle(0xF0F0F0);
@@ -702,6 +708,8 @@ class MyScene extends Phaser.Scene {
             TILE_SIZE * PLAY_HEIGHT
         );
         
+        //stop here if the game has been lost
+        if (!this.gameActive){return;}
         
         //update the attack timer
         if (!this.attacking){
@@ -779,6 +787,11 @@ class MyScene extends Phaser.Scene {
         }
         this.enemies.pop();
         this.resource += ENEMY_COST;
+    }
+    
+    loose(){
+        this.gameActive = false;
+        this.add.text(25, 150, "You Have Lost!", {color: "#000", fontSize: "128px"});
     }
     
     SelectedPos(){
