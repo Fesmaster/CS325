@@ -65,7 +65,6 @@ class MyScene extends Phaser.Scene {
     
     preload() {
         // Load an image and call it 'logo'.
-        this.load.image( 'logo', 'assets/FesmasterLogo.jpg' );
         this.load.image( 'ground', 'assets/TestGround.png' );
         this.load.spritesheet("player", "assets/Player.png", {frameWidth: 64, frameHeight: 64});
         this.load.spritesheet("enemy", "assets/Enemy.png", {frameWidth: 64, frameHeight: 64});
@@ -199,7 +198,7 @@ class MyScene extends Phaser.Scene {
             }
             //make sure they stay moving!
             for(let i=0;i<this.platforms.length; i++){
-                this.platforms[i].setVelocityX(-75);
+                this.platforms[i].setVelocityX(this.platforms[i].velx);
             }
         }
         
@@ -229,9 +228,11 @@ class MyScene extends Phaser.Scene {
         //console.log(this.platforms.length);
         let h = 200 + Math.floor(Math.random() * 200);
         let p = this.physics.add.image(1000, h, "ground").setScale(0.5).refreshBody();
+        let v = 50+Math.floor(Math.random() * 50);
         p.setImmovable(true);
         p.body.allowGravity = false;
-        p.setVelocityX(-75);
+        p.velx = -v
+        p.setVelocityX(-v);
         this.physics.add.collider(this.player, p);
         for(let i = 0;i<this.enemies.length;i++){
             this.physics.add.collider(this.enemies[i], p);
@@ -250,7 +251,7 @@ const game = new Phaser.Game({
     physics: { 
         default: 'arcade',
         arcade: {
-            debug: true,
+            //debug: true,
             gravity: {y:1600}
             /*{
                 

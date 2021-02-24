@@ -19,84 +19,86 @@ body
 <body>
 <div id="game"></div>
 <div id="readme">
-<h2>Your game title</h2>
-
+<h2>Pirate Attack</h2>
+Use A and D to move, SPACE or W to jump, and click to attack. You cannot hold down attack.
 <ul>
 <li><strong>Originality:</strong>
 Q: What is original about your game?<br>
 &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
-A: Not much. From the template I changed the 
-physics engine to support scaling the image, 
-otherwise it would not fit in the bounds. This 
-required that I reimplement the mouse attraction.
+A: Good question. At this stage, its not much to look at. And there isn't a whole lot "original" with it, but, compared to Phaser templates, it has moving platforms and enemies to kill.
 </li>
 
 <li><strong>Technical Merit:</strong>
 Q: What is interesting about your game technology?<br>
 &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
-A: Not much in this demo.
+A: Unfortunately, again, not much. I tried to work with some better physics systems to provide smooth speedup and slowdown, but that caused a number of problems, including falling through platforms and getting launched sideways by vertical collisions. I ended up scrapping the entire thing, as it had so many bugs. 
 </li>
 
 <li><strong>Prototype Postmortem:</strong>
 Q: What did you learn from this prototype?
 What was the easiest or hardest part of making it? <br>
 &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
-A: Changeing the physics engine. The one used 
-in the template does not support scaling, 
-which was somthing I needed for this image.
+A: The primary thing I learned is that Phaser3 is a piece of junk. Its physics support is ... shoddy. At best. It does not have ANY way to get the velocity of a body. Very simple thing to do, and very nesecary. And there is no way to do it. This makes absolutely no sense. The other main thing I learned is that is is selectively buggy. There are animation bugs that don't make any sense. These two issues consumed almost all my time for this project, and guess what? Neither were solved, and not from lack of trying. One I had to give up the uniqueness of my game to get somthing playable(physics), the other just never got solved (animations). 
 </li>
 
 <li><strong>Prototype Assets:</strong>
 Q: Did you make your prototype assets from scratch? Did you borrow them? Cite your sources here.
 <ul>
-<li>Purple Archer Image: I have no idea where I found this image, it was years ago. I use it for most of my accounts.</li>
+<li>Characters: <a href=https://opengameart.org/content/lpc-medieval-fantasy-character-sprites>https://opengameart.org/content/lpc-medieval-fantasy-character-sprites</a> Creative Commons License (modifed)</li>
+<li>Everything else I made.</li>
 </ul>
 </li>
 
 <li><strong>Prototype Closest Other Game:</strong>
 Q: Which other game most closely resembles your game? If you are borrowing code from a Phaser Example, you must say so here. If you borrow code from elsewhere, you must say so here.<br>
 &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
-A: I used some stuff from a number of templates, but mostly had to write it myself with them as a guide. No copy-paste.
+A: This tutorial was used <a href=https://phaser.io/tutorials/making-your-first-phaser-3-game/part1>Making your first Phaser3 Game</a>. This is the instructions for <a href=https://phaser.io/examples/v3/category/games/firstgame>this</a> template. <br>
+However, this was all just reference, I did not copy-paste anything. Looking at the code, they are similar, but quite different.
 </li>
 
 <li><strong>High Concept:</strong>
-A zero-level template modification.
+Invade the skeleton pirate compound.
 </li>
 
 <li><strong>Theme:</strong>
-N/A
+Pirate
 </li>
 
 <li><strong>Mandated Variety:</strong>
-N/A
+<ul>
+<li>Input:Keyboard, Direct</li>
+<li>Randomness: Lots</li>
+<li>Play Style: Intended to be Competitor, but its pretty broken at the moment</li>
+<li>Gnere: Side-scroller</li>
+</ul>
 </li>
 
 <li><strong>Prototype Goal:</strong>
-Physics attraction of image to mouse.
+I wanted to make a smooth speedup and slowdown sidescroller, but I am doubting that is resonable to do in Phaser. I certanly failed. The physics engine was just to difficult to work with.
 </li>
 
 <li><strong>Player Experience Goals:</strong>
-N/A
+It was supposed to be about smooth, good controls. Now, it "Maybe this is playable."
 </li>
 
 <li><strong>Gameplay:</strong>
-N/A
+Basically nothing. You can kill skeletons. Or not. No winning, no loosing.
 </li>
 
 <li><strong>Strategies:</strong>
-N/A
+None. Kind of pointless, currently.
 </li>
 
 <li><strong>Story/Setting/Premise:</strong>
-N/A
+Invading a skeleton pirate base.
 </li>
 
 <li><strong>Target Audience:</strong>
-N/A
+You. Probably.
 </li>
 
 <li><strong>Play Time:</strong>
-N/A
+Infinity, if you want. Or just close the tab when you get bored.
 </li>
 
 </ul>
