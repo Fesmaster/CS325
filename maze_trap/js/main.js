@@ -161,6 +161,7 @@ class MyScene extends Phaser.Scene {
         this.Interactables = [];
         this.killtypes = {};
         this.kills = 0;
+        this.scream = null;
     }
     
     preload() {
@@ -171,6 +172,8 @@ class MyScene extends Phaser.Scene {
         this.load.image("leverRight", "assets/Lever_Right.png");
         this.load.image("leverLeft", "assets/Lever_Left.png");
         this.load.image("wallTrap", "assets/Wall_Trap.png");
+        
+        this.load.audio("Wilhelm_Scream", "assets/Wilhelm_Scream.ogg");
     }
     
     create() {
@@ -180,6 +183,9 @@ class MyScene extends Phaser.Scene {
         this.right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         this.up    = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         this.down  = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+        
+        //create sound
+        this.scream = this.sound.add("Wilhelm_Scream");
         
         //create map
         this.map = this.make.tilemap({key: "map"});
@@ -441,6 +447,7 @@ class MyScene extends Phaser.Scene {
     
     //kill the player
     kill(message, type){
+        this.scream.play();
         if (this.killtypes[type] === undefined){
             this.killtypes[type] = true;
             alert("You Have Died!\n"+message);

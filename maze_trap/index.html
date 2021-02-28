@@ -19,84 +19,89 @@ body
 <body>
 <div id="game"></div>
 <div id="readme">
-<h2>Your game title</h2>
+<h2>Don't Solve the Maze</h2>
+In this game, you play as a Dot Person, and your job is to test the traps in this maze by finding them and dying to them. Sounds brutal, but Dot People feel no pain and are instantly reincarnated, so they are perfect for the job. 
+WSAD to move, and the mouse to click on things. (clickables get an outline when you mouse over them.)
+There are a total of nine (9) possible ways to die.
 
 <ul>
 <li><strong>Originality:</strong>
 Q: What is original about your game?<br>
 &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
-A: Not much. From the template I changed the 
-physics engine to support scaling the image, 
-otherwise it would not fit in the bounds. This 
-required that I reimplement the mouse attraction.
+A: I wanted to make a game with the brutality of a roguelike, but have dying the point of the game. So, it uses basic movements, and whatnot, but combines that with lots of death traps.
 </li>
 
 <li><strong>Technical Merit:</strong>
 Q: What is interesting about your game technology?<br>
 &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
-A: Not much in this demo.
+A: Several things. First, the tilemap is imported from Tiled, and uses tile collisions created in Tiled. This was a bit of a challenge to get working. The most difficult part was the animated tiles, Phaser3 does not support that by default so I had to hack together a solution.
+<br>The next large thing is the simple-to-create area triggers and mouse interactable objects. Making and adding one to the map is very easy, as well as giving it callbacks. There is very little fanagling needed to make them work, all the magic happens in the classes. 
 </li>
 
 <li><strong>Prototype Postmortem:</strong>
 Q: What did you learn from this prototype?
 What was the easiest or hardest part of making it? <br>
 &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
-A: Changeing the physics engine. The one used 
-in the template does not support scaling, 
-which was somthing I needed for this image.
+A: Dealing with Phaser problems due to the Physics and the tilemap was pretty annoying. After that, it was smooth sailing. The biggest thing I learned was how to deal with tilemaps, and the next was a new model for handling buttons and events. (a model that runs on top of phaser's method.)
 </li>
 
 <li><strong>Prototype Assets:</strong>
 Q: Did you make your prototype assets from scratch? Did you borrow them? Cite your sources here.
 <ul>
-<li>Purple Archer Image: I have no idea where I found this image, it was years ago. I use it for most of my accounts.</li>
+<li>All images were made from scratch.</li>
+<li>The Wilhelm Scream is a public domain sound asset, used in many notible films (Including Star Wars, Indiana Jones, Toy Story, Game of Thrones, and Marvel's Avengers Infinity War). This copy was sourced from <a href=https://en.wikipedia.org/wiki/File:Wilhelm_Scream.ogg>Wikipedia's</a> library.</li>
 </ul>
 </li>
 
 <li><strong>Prototype Closest Other Game:</strong>
 Q: Which other game most closely resembles your game? If you are borrowing code from a Phaser Example, you must say so here. If you borrow code from elsewhere, you must say so here.<br>
 &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
-A: I used some stuff from a number of templates, but mostly had to write it myself with them as a guide. No copy-paste.
+A: I referenced a number of templates, but this is all original code, written from scratch.
 </li>
 
 <li><strong>High Concept:</strong>
-A zero-level template modification.
+Instead of solving a maze, fail to do so spectacularly.
 </li>
 
 <li><strong>Theme:</strong>
-N/A
+I chose a challenge: Murphy's Law
 </li>
 
 <li><strong>Mandated Variety:</strong>
-N/A
+<ul>
+<li>Input: direct, mouse, keyboard, clickable buttons</li>
+<li>Randomness: Deterministic</li>
+<li>Play Style: Explorer, Achiver</li>
+<li>Genre: Roguelike variation</li>
+</ul>
 </li>
 
 <li><strong>Prototype Goal:</strong>
-Physics attraction of image to mouse.
+I wanted to make somthing using tilemaps imported from Tiled, and use its level editor for a lot of my content. I also wanted a good, consistant art style, and flowing play.
 </li>
 
 <li><strong>Player Experience Goals:</strong>
-N/A
+Play needed to flow smoothly, quick resawn cycle, and good death notifications.
 </li>
 
 <li><strong>Gameplay:</strong>
-N/A
+The gameplay consists of moving around, triggering traps, either by entering a area trigger or clicking somthing.
 </li>
 
 <li><strong>Strategies:</strong>
-N/A
+Not a whole lot, other than play around and look for secrets.
 </li>
 
 <li><strong>Story/Setting/Premise:</strong>
-N/A
+As stated above, you play as a Dot Person employed to test the traps in a maze, before it is given to the hero to solve.
 </li>
 
 <li><strong>Target Audience:</strong>
-N/A
+The class, I guess.
 </li>
 
 <li><strong>Play Time:</strong>
-N/A
+More than 5 minutes, if you want all the deaths.
 </li>
 
 </ul>
