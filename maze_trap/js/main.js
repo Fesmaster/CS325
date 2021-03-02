@@ -476,10 +476,10 @@ const game = new Phaser.Game({
             gravity: {x:0,y:0}
         },
         matter: {
-            debug: {
-                showBody: true,
-                showStaticBody: true
-            },
+            //debug: {
+            //    showBody: true,
+            //    showStaticBody: true
+            //},
             gravity: {x:0,y:0}
         }
     },
