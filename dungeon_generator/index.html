@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Hello! Amaze!</title>
+<style>
+body
+{
+    color: #777;
+    font-family: "Avenir", Verdana, sans-serif;
+}
+#readme
+{
+    margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+<div id="game"></div>
+<div id="readme">
+<h2>Clean Dungeon Generator</h2>
+This is less of a game and more of a game part. The idea is this is prototyping part of a dungeon generation system. Particularly, it is testing some algorithms for room placement and arrangement. To give it some interaction, I added a Dot Person player, and collisions to the walls.
+WSAD for control.
+
+<ul>
+<li><strong>Originality:</strong>
+Q: What is original about your game?<br>
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
+A: The originality of this is the generator system: the map is never the same. Reload the page for an example! This works by using a dynamically built tilemap, which is rather complicated. More on that later. 
+</li>
+
+<li><strong>Technical Merit:</strong>
+Q: What is interesting about your game technology?<br>
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
+A: The generation system that is at the core of this prototype is a rather difficult achievement. Procedural generation of anything is a pain at the best of times, and there are examples of many games that do it poorly.
+<p>A bit of a background on procedural generation to help understand what I am doing:</p>
+<p>There are a few "styles" of procedural generation systems: A commonly used one is to use a bunch of "pre-fabricated" parts and arrange them ranomly based off a set of rules. Lots of games do this: Minecraft uses it for villages, strongholds, end cities, and many other structures. Hades (A RogueLike game) uses this to generate its endless dungeons. This system does a good job making the "feel" of a structure the same, and having parts that flow into one another, but overall, it starts to feel like every structure is the same. (ie, The Blacksmith house in a Minecraft village is always the same structure)</p>
+<p>Another system (also used by Minecraft) is that of a series of rules. These rules can use randomness or some sort of noise function (Perlin Noise, Open Simplex Noise, etc) to build elements of the world. Minecraft uses this for the terrain, biome and other generations, like ore, locations of structures, etc. It is generally a fairly good system, delivering content that does feel different as more and more is discovered, but the rules can often be easily predicted. (Another game that uses this very well is Dwarf Fortresss). This is the sort of system I am using. More on that later.</p>
+<p>The final system is to use a computer learning algorithm, like a neural network, to output all the parts of a generated object, and use a small random "seed" to influence it. While this has great potential, being unpredictable and often not felling the same, it is very complex, and I can't think of any game that does it, due to the implicit complexity of the algorithms, and its current highly limited sucess. These types of systems generally are not very coherent, as training artificial neural networks is pretty hard.</p>
+<br><p>Anyway, about what I did: My system uses a particular algorithm, a set of rules, to generate the dungeons. This is not that uncommon, as other games do this. However, this method is generally not used for structures, as it can normally lead to inconsistencies, like rooms being overwritten by other rooms. In fact, this sort of thing is pretty common. My main test was to try and make a generator that specifically did not do that: No room overlaps!</p>
+<p>How did I do this? The creation of a room follows a few steps: choose a "start" position (ie, the door) and a direction. Then, use a flood fill algorithm to find a rectangular space originating from this door point. Then, decide if that room is worth making (ie, is it large enough? is the door in one of the walls? etc.) If so, build the room, and choose some more random doors along its perimiter. A simple algorithm, but very effective.I have actually never gotten this working before!</p>
+<br><p>The second thing that is impressive is the use of the tileset to make smooth blending of the walls. The way this is done is pretty straightforward. The generator does not generate directly to the tilemap, instead, it generates to a 2d int array. The values in this array are essentally: FILL, EDGE, NONE. (they apply only to the walls).</p>
+<p>Once this is done, its time to actually write the tile information. All NONE tiles are skippend, and all FILL tiles are set to be the filled black tile. However, for the EDGE tiles, they go through an algorithm that calculates their adjacency information and uses this as a lookup index into a table that contains tileIDs for the wall that matches that adjacency information. This allows for the smooth transitions.</p>
+</li>
+
+<li><strong>Prototype Postmortem:</strong>
+Q: What did you learn from this prototype?
+What was the easiest or hardest part of making it? <br>
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
+A: I learned a number of things. 
+<p>The first of which is that JavaScript is really slow. The flood fill algorithm takes forever, even though it is resonably limited. This same algorithm runs so much faster in other languages. But that is not a surprise. Other things I learned included the adjacency calculation and lookup system. I had not made one of those before, though, I had worked out an idea of how to do it a long time ago. This was the first time I tried to implement it. And it almost worked the first try. (It didn't because of one thing: apperently, in javascript, the '&amp;' operator takes place after equality checking. Ie the statment: "a &amp; b == c" is equivilent to "a &amp; (b == c)". )</p>
+<p>There are a number of problems with this generator still, though. One of the major ones is that the graph of the rooms (ie, each room is a vertex, each door a edge) turns out to be a tree graph. There are no interconnections. Also, each room is made at its maximum possible size in the area, this could be modified. There are other optimizations that could be done, like, changing the number of attempted doors per room (currently: 8!) and possibly generating those from a set of rules instead of random selection.</p>
+</li>
+
+<li><strong>Prototype Assets:</strong>
+Q: Did you make your prototype assets from scratch? Did you borrow them? Cite your sources here.
+<ul>
+<li>All images were made from scratch.</li>
+</ul>
+</li>
+
+<li><strong>Prototype Closest Other Game:</strong>
+Q: Which other game most closely resembles your game? If you are borrowing code from a Phaser Example, you must say so here. If you borrow code from elsewhere, you must say so here.<br>
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
+A: All written from scratch, but some basic code borrowed from the previous digital assignment
+</li>
+
+<li><strong>High Concept:</strong>
+Prototype of a dungeon generation system
+</li>
+
+<li><strong>Theme:</strong>
+Cleaning! How so? this is a very clean dungeon: no clutter! Also, my desk is cleaner not having any drawings of dungeon maps on it!
+</li>
+
+<li><strong>Mandated Variety:</strong>
+<ul>
+<li>Input: keyboard</li>
+<li>Randomness: Highly Random</li>
+<li>Play Style: Explorer</li>
+<li>Genre: N/A, feature prototype</li>
+</ul>
+</li>
+
+<li><strong>Prototype Goal:</strong>
+If it was not clear from above, this was to prototype a specific dungeon generator.
+</li>
+
+<li><strong>Player Experience Goals:</strong>
+Not really intended as a game. 
+</li>
+
+<li><strong>Gameplay:</strong>
+The gameplay consists of moving around and refreshing the page to get a different dungeon.
+</li>
+
+<li><strong>Strategies:</strong>
+Not Applicable.
+</li>
+
+<li><strong>Story/Setting/Premise:</strong>
+Not Applicable.
+</li>
+
+<li><strong>Target Audience:</strong>
+Me, as I wanted to test the system. Also, you, to tell me what you think.
+</li>
+
+<li><strong>Play Time:</strong>
+However long you want. You will probably get bored quickly.
+</li>
+
+</ul>
+</div>
+
+<!-- main.js must come at the end since it expects the HTML to have been created. -->
+<script src="js/main.js" type="module"></script>
+</body>
+</html>
