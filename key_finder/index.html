@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Key Finder</title>
+<style>
+body
+{
+    color: #777;
+    font-family: "Avenir", Verdana, sans-serif;
+}
+#readme
+{
+    margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+<div id="game"></div>
+<div id="readme">
+<h2>Key Finder</h2>
+
+WSAD for control.
+
+<ul>
+<li><strong>Originality:</strong>
+Q: What is original about your game?<br>
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
+A: While games of tag and the like have existed for a while, where the goal of one player is to catch the others, this game modifies that by giving the chased player goals to get to so that this player can win.
+<br>
+Some might notice that this game looks myseriously similar to my last one. This is true, they are visually similar, and even rely on a lot of the same code. My previous prototype was a random dungeon generator. I took this random generator, and, with a few tweaks, used it in this game. However, this game is a totally different prototype. The dungeon generator is not the focus, nor the most important part. It is just a system that I used, and modified for this game. Digital prototypes, according to the book, should recycle old code to make them easier to develop. It would have taken me significantly longer and require much more effort to build a new generator, or even to build a hand-made level. Thus, it made sense to recycle this system for a new game.
+</li>
+
+<li><strong>Technical Merit:</strong>
+Q: What is interesting about your game technology?<br>
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
+A: The big tech feature of this game is the use of A* pathfinding. This is a type of graph-based pathfinding algorithm that is used to allow NPC creatues to navigate a game world. It is related to Dijkstra's Algorithm, a famous type of graph pathfinding. Implementing this was actually rather difficult, as it requires a lot of interesting code, as well as some complex data structures, like a priority queue. Fortunately, I was able to find a priority queue javascript implementation online that I decided to use. One more part I did not have to write from scratch, and it offered all the functionality I needed. This code is from <a href=https://javascript.plainenglish.io/introduction-to-priority-queues-in-javascript-30cfc49b01ee>https://javascript.plainenglish.io/introduction-to-priority-queues-in-javascript-30cfc49b01ee</a>
+<br>
+On the whole, this is certanly the most ambitious project I have made for this class yet. It helped that I had the whole dugeon generator written already. I also used the player system and triggers from my Maze Trap game, as they worked so well. This gave me the majority of the parts I needed, which is awesome, as it allowed me to focus on developing the new parts, instead of repeating old work or doing general grunt work programming.
+</li>
+
+<li><strong>Prototype Postmortem:</strong>
+Q: What did you learn from this prototype?
+What was the easiest or hardest part of making it? <br>
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
+A: The most interesting part of this was generating the navigational mesh used to allow the enemy to pathfind. The idea was pretty simple: place a vertex at each door and in the center of each room, and then connect them in such a way that each connection is an unobstructed path. Writing the code was not too difficult, indeed, it was rather enjoyable. I had a lot of fun displaying the graph using a graphics object, visually seeing the navmesh was very helpful.
+<br>
+The most difficult part was implementing Dijkstra's Algorithm, a precursor to A* pathfinding. I actually caused the page to crash over using too much memory a few times. Once I had ironed out the silly mistakes I made when writing it, it was a simple matter of modifying the heuristics to make the algorithm A* pathfinding. This page was really helpful: <a href=https://theory.stanford.edu/~amitp/GameProgramming/AStarComparison.html>https://theory.stanford.edu/~amitp/GameProgramming/AStarComparison.html</a>.
+</li>
+
+<li><strong>Prototype Assets:</strong>
+Q: Did you make your prototype assets from scratch? Did you borrow them? Cite your sources here.
+<ul>
+<li>All images were made from scratch.</li>
+<li>Key Click sound effect from <a href=https://soundbible.com/1405-Dry-Fire-Gun.html>https://soundbible.com/1405-Dry-Fire-Gun.html</a>, used under the Atributation 3.0 license.</li>
+<le>Wilhelm Scream sound effect is public domain.</li>
+</ul>
+</li>
+
+<li><strong>Prototype Closest Other Game:</strong>
+Q: Which other game most closely resembles your game? If you are borrowing code from a Phaser Example, you must say so here. If you borrow code from elsewhere, you must say so here.<br>
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
+A: The closes thing is my previous dungeon generator, which was used, with some tweaks. Thus, the layout looks almost identical.
+</li>
+
+<li><strong>High Concept:</strong>
+Avoid getting touches while getting to goals
+</li>
+
+<li><strong>Theme:</strong>
+I did not use any of the themes or challenges. This was allowed.
+</li>
+
+<li><strong>Mandated Variety (At this point, I have used all of these up):</strong>
+<ul>
+<li>Input: keyboard</li>
+<li>Randomness: Highly Random</li>
+<li>Play Style: Survivor</li>
+<li>Genre: Roguelike, maybe? I am not too sure.</li>
+</ul>
+</li>
+
+<li><strong>Prototype Goal:</strong>
+The main goal was to try and implement A* pathfinding. This worked extremely well! 
+</li>
+
+<li><strong>Player Experience Goals:</strong>
+The player experiences the stress of having to think fast and on his/her feet, as the enemy is constantly coming after the player.
+</li>
+
+<li><strong>Gameplay:</strong>
+Gameplay is simple: use WSAD to move around the map and find 5 keys, and avoid letting the enemy touch you.
+</li>
+
+<li><strong>Strategies:</strong>
+The best strategy is to use complex nonlinear paths that can make the path more difficult for the enemy to navigate.
+</li>
+
+<li><strong>Story/Setting/Premise:</strong>
+In the past few prototypes, the player has been playing a Dot Person (pink square). Now, you are playing the Dot Person's Boss. And the Dot Person wants a raise. So the boss told the Dot Person that they could have a 200% raise. However, this was meaningless, as the Dot Person was never paid to begin with (2 * 0 == 0). Once the Dot Person realized that he had been fooled, he decided to lock the Boss in a maze, and chase him down. However, the boss had five hidden keys in this maze just in cast this happened.
+</li>
+
+<li><strong>Target Audience:</strong>
+You, I guess. 
+</li>
+
+<li><strong>Play Time:</strong>
+A few minutes. Or less. The Dot Person Enemy can spawn pretty close to the player.
+</li> 
+
+</ul>
+</div>
+
+<!-- main.js must come at the end since it expects the HTML to have been created. -->
+<script src="js/main.js" type="module"></script>
+</body>
+</html>
