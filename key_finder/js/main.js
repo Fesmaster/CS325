@@ -792,7 +792,7 @@ class MyScene extends Phaser.Scene {
                 isSensor: true, 
                 onCollideCallback: function(pair){
                     if (pair.bodyA.label === "player" || pair.bodyB.label === "player") {
-                        this.gameObject.scene.loose();
+                        this.gameObject.scene.lose();
                     }
                 }
             }
@@ -1001,8 +1001,8 @@ class MyScene extends Phaser.Scene {
         this.playing = false;
     }
     
-    loose(){
-        let winText = this.add.text(290, 128, "You Loose", {
+    lose(){
+        let winText = this.add.text(290, 128, "You Lose", {
             fontSize: '40px',
             padding: {x: 10, y: 5},
             fill: "#ffffff",
