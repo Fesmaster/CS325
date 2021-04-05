@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Key Finder</title>
+<style>
+body
+{
+    color: #777;
+    font-family: "Avenir", Verdana, sans-serif;
+}
+#readme
+{
+    margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+<div id="game"></div>
+<div id="readme">
+<h2>Key Finder (V2)</h2>
+
+Controls: WSAD.
+<br>
+Goal: find the five keys before the pink dot person catches you.
+<br><br>
+Other: to toggle the display of a visualization of the navigational mesh, press K.
+
+<ul>
+<li><strong>Originality:</strong>
+Q: What is original about your game?<br>
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
+A: While games of tag and the like have existed for a while, where the goal of one player is to catch the others, this game modifies that by giving the chased player goals to get to so that this player can win. 
+<br>
+From V2 on, it is not as easy as V1: the more goals obtained, the faster the chaser moves, to the point that he moves faster than the player. Also, he can never get too far behind, or get stuck.
+</li>
+
+<li><strong>Technical Merit:</strong>
+Q: What is interesting about your game technology?<br>
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
+A: The big technical feature of this game is the use of A* pathfinding. This is a type of graph-based pathfinding algorithm that is used to allow NPC creatues to navigate a game world. It is related to Dijkstra's Algorithm, a famous type of graph pathfinding. Implementing this was actually rather difficult, as it requires a lot of interesting code, as well as some complex data structures, like a priority queue. Fortunately, I was able to find a priority queue javascript implementation online that I decided to use. One more part I did not have to write from scratch, and it offered all the functionality I needed. This code is from <a href=https://javascript.plainenglish.io/introduction-to-priority-queues-in-javascript-30cfc49b01ee>https://javascript.plainenglish.io/introduction-to-priority-queues-in-javascript-30cfc49b01ee</a>
+<br>
+On the whole, this is certainly the most ambitious project I have made for this class yet (Over 1100 lines of code!). It helped that I had the whole dungeon generator written already. I also used the player system and triggers from my Maze Trap game, as they worked so well. This gave me the majority of the parts I needed, which is awesome, as it allowed me to focus on developing the new parts, instead of repeating old work or doing general grunt work programming.
+<br>
+Some stuff I added for V2. The big one was detecting if a point is on the screen. Phaser's naming convention is ... well, there is no convention. The location of a camera in a scene is not the camera's position(x and y), or its center(centerX, centerY), or even its origin(originX, originY). Its stored in two fields called scrollX and scrollY. Why? I have no idea. This sort of inconsistent naming makes it very difficult to write code, and a lot of time wasted in reading documentation.
+</li>
+
+<li><strong>Prototype Postmortem:</strong>
+Q: What did you learn from this prototype?
+What was the easiest or hardest part of making it? <br>
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
+A: The most interesting part of this was generating the navigational mesh used to allow the enemy to pathfind. The idea was pretty simple: place a vertex at each door and in the center of each room, and then connect them in such a way that each connection is an unobstructed path. Writing the code was not too difficult, indeed, it was rather enjoyable. I had a lot of fun displaying the graph using a graphics object, visually seeing the navmesh was very helpful.
+<br>
+The most difficult part was implementing Dijkstra's Algorithm, a precursor to A* pathfinding. I actually caused the page to crash over using too much memory a few times. Once I had ironed out the silly mistakes I made when writing it, it was a simple matter of modifying the heuristics to make the algorithm A* pathfinding. This page was really helpful: <a href=https://theory.stanford.edu/~amitp/GameProgramming/AStarComparison.html>https://theory.stanford.edu/~amitp/GameProgramming/AStarComparison.html</a>.
+<br>
+Moving on to the difficulties of version 2, I decided to clean up my code a little first, properly comment and format stuff, and use BEGIN and END tags around related blocks of code. This made the code easier to read. (and related sections collapsible) With this cleanup in place, it was not too difficult to add the various tweaks I had planned to make the game significantly more difficult. 
+<br>
+One feature I added was that the enemy teleports to the offscreen vertex along his path closest to the player. This really allows him to follow the player closely. However, it required a check to see if a point was being rendered. This was rather interesting and surprisingly difficult to write, due to Phaser not having a good field naming standard.
+</li>
+
+<li><strong>Prototype Assets:</strong>
+Q: Did you make your prototype assets from scratch? Did you borrow them? Cite your sources here.
+<ul>
+<li>All images were made from scratch.</li>
+<li>Key Click sound effect from <a href=https://soundbible.com/1405-Dry-Fire-Gun.html>https://soundbible.com/1405-Dry-Fire-Gun.html</a>, used under the Atributation 3.0 license.</li>
+<le>Wilhelm Scream sound effect is public domain.</li>
+</ul>
+</li>
+
+<li><strong>Prototype Closest Other Game:</strong>
+Q: Which other game most closely resembles your game? If you are borrowing code from a Phaser Example, you must say so here. If you borrow code from elsewhere, you must say so here.<br>
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
+A: This game is an iteration on V1 of the Key Finder game, and most closly resembles it. A number of things have changed, or, more accurately, improved.
+<ul>
+<li>Improved A* path selection so that jittery paths were removed. This prevents the enemy from getting stuck in doorways.</li>
+<li>The enemy moves faster and faster the more keys are collected, making the game more difficult as you collect keys. With two or three left, he starts moving faster than you!</li>
+<li>The enemy teleports to the navigational vertex that is closest to the player but is offscreen when he is offscreen. This makes it impossible to leave the enemy in the dust.</li>
+</ul>
+As can be easily guessed, these are all here to ramp up the difficulty of the game, and make it more interesting and fun to play.
+</li>
+
+<li><strong>High Concept:</strong>
+Avoid getting touched by an enemy while getting to goals
+</li>
+
+<li><strong>Theme:</strong>
+I did not use any of the themes or challenges. This was allowed.
+</li>
+
+<li><strong>Mandated Variety (At this point, I have used all of these up):</strong>
+<ul>
+<li>Input: keyboard.</li>
+<li>Randomness: Highly Random.</li>
+<li>Play Style: Survivor.</li>
+<li>Genre: Roguelike.</li>
+</ul>
+</li>
+
+<li><strong>Prototype Goal:</strong>
+The main goal was to try and implement A* pathfinding. This worked extremely well! 
+</li>
+
+<li><strong>Player Experience Goals:</strong>
+The player experiences the stress of having to think fast and on his/her feet, as the enemy is constantly coming after the player.
+</li>
+
+<li><strong>Gameplay:</strong>
+Gameplay is simple: use WSAD to move around the map and find 5 keys, and avoid letting the enemy touch you. For demonstration purposes, pressing K will toggle the debug drawing of the navigational mesh.
+</li>
+
+<li><strong>Strategies:</strong>
+The best strategy is to use complex nonlinear paths that can make the path more difficult for the enemy to navigate. Combine this with scouting the map and not collecting keys till you are ready and have a path in mind, and you may be able to win. It takes luck.
+</li>
+
+<li><strong>Story/Setting/Premise:</strong>
+In the past few prototypes, the player has been playing a Dot Person (pink square). Now, you are playing the Dot Person's Boss. And the Dot Person wants a raise. So the boss told the Dot Person that they could have a 100% raise. However, this was meaningless, as the Dot Person was never paid to begin with (2 * 0 == 0). Once the Dot Person realized that he had been fooled, he decided to lock the Boss in a maze, and chase him down. However, the boss had five hidden keys in this maze just in cast this happened.
+</li>
+
+<li><strong>Target Audience:</strong>
+You, I guess. 
+</li>
+
+<li><strong>Play Time:</strong>
+A few minutes. Or less. The Dot Person Enemy can spawn pretty close to the player, which is instant death. This is intentional.
+</li> 
+
+</ul>
+</div>
+
+<!-- main.js must come at the end since it expects the HTML to have been created. -->
+<script src="js/main.js" type="module"></script>
+</body>
+</html>
