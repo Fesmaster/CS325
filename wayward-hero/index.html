@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Wayward Hero</title>
+<style>
+body{color: #777; font-family: "Avenir", Verdana, sans-serif;}
+.terminal{
+    color:gainsboro;
+    background-color:#050505;
+    font-family: monospace;
+}
+#readme
+{
+    margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<div id="gamebox" class="terminal">
+<div id="game" class="terminal"></div>
+<div id="controls" class="terminal">
+<p><input type="text" name="command" size="128" maxlength="128" autofocus onkeypress="log(event)" class="terminal"></p>
+<script>
+function log(event){
+    var c = event.which || even.keyCode;
+    if (c == 13){
+        let doc = document.getElementsByName("command")[0]; //get the doc
+        recieve_command(doc.value.replace(/<[^>]+>/g, "")); //finter out html elements!
+        doc.value = "";
+    }
+}
+</script>
+</div>
+</div>
+
+<div id="readme">
+<h2>Wayward Hero</h2>
+
+<ul>
+<li><strong>Originality:</strong>
+Q: What is original about your game?<br>
+A: 
+</li>
+
+<li><strong>Technical Merit:</strong>
+Q: What is interesting about your game technology?<br>
+A: 
+</li>
+
+<li><strong>Prototype Postmortem:</strong>
+Q: What did you learn from this prototype?
+What was the easiest or hardest part of making it? <br>
+A: 
+</li>
+
+<li><strong>Prototype Assets:</strong>
+Q: Did you make your prototype assets from scratch? Did you borrow them? Cite your sources here.
+<ul>
+
+</ul>
+</li>
+
+<li><strong>Prototype Closest Other Game:</strong>
+Q: Which other game most closely resembles your game? If you are borrowing code from a Phaser Example, you must say so here. If you borrow code from elsewhere, you must say so here.<br>
+A: 
+</li>
+
+<li><strong>High Concept:</strong>
+</li>
+
+<li><strong>Theme:</strong>
+</li>
+
+<li><strong>Mandated Variety:</strong>
+<ul>
+<li>Input:Keyboard</li>
+<li>Randomness: Lots</li>
+<li>Play Style:</li>
+<li>Gnere:</li>
+</ul>
+</li>
+
+<li><strong>Prototype Goal:</strong>
+</li>
+
+<li><strong>Player Experience Goals:</strong>
+</li>
+
+<li><strong>Gameplay:</strong>
+</li>
+
+<li><strong>Strategies:</strong>
+</li>
+
+<li><strong>Story/Setting/Premise:</strong>
+</li>
+
+<li><strong>Target Audience:</strong>
+</li>
+
+<li><strong>Play Time:</strong>
+</li>
+
+</ul>
+</div>
+
+<script src="js/main.js"></script>
+</body>
+</html>
