@@ -28,7 +28,7 @@ function log(event){
     var c = event.which || even.keyCode;
     if (c == 13){
         let doc = document.getElementsByName("command")[0]; //get the doc
-        recieve_command(doc.value.replace(/<[^>]+>/g, "")); //finter out html elements!
+        recieve_command(doc.value.replace(/<[^>]+>/g, "")); //filter out html elements!
         doc.value = "";
     }
 }
@@ -39,73 +39,89 @@ function log(event){
 <div id="readme">
 <h2>Wayward Hero</h2>
 
+<h4>Controls and Commands</h4>
+Commands are phrased as basic imperitive sentances, such as <b>go north</b>. There are a number of verbs that are recognized, namely:
+<ul>
+<li><b>go, move, walk, travel</b> for movement.</li>
+<li><b>look, examine, perceive, view, find, search</b> for looking around and searching.</li>
+<li><b>take, pickup, pick, grab, gather</b> for collecting items</li>
+<li><b>draw, hold</b> for selecting the wielded item</li>
+<li><b>attack, hit</b> for attacking enemies</li>
+<li><b>use, eat, burn, ignite, light</b> for using and consuming items</li>
+<li><b></b></li>
+</ul>
+
+<h3>The Questions:</h3>
 <ul>
 <li><strong>Originality:</strong>
 Q: What is original about your game?<br>
-A: 
+A: That is an interesting question. This game is a challenge, to me, the maker, to try and make somthing fun and interesting using a severely limited interaction system, trying to emulate the old days before graphics were a common part of computers. So, mechanics-wise, there is nothing fantastically original. However, for this class and for most games made nowadays, this is a completely original game, its rare to see a game with absolutely no graphics today. In fact, I can't even think of an example. The closest thing I have to graphics is colored text!
 </li>
 
 <li><strong>Technical Merit:</strong>
 Q: What is interesting about your game technology?<br>
-A: 
+A: <p>This game has been a technical challenge from beginning to end. As of me writing this, it is matching my previous game at over 1100 lines of code. Without Phaser or any other engine to back me up, this project has truely been written from scratch. All the interaction is using the manipulation of the contents of a div in the HTML of the page, inserting paragraphs and spans.</p>
+<p>And that does not even bring me to the more difficult and interesting parts. I had to write a massive ammount of support code, from functions to remove an index in an array without leaving a hole, to random choice utilities.</p>
+<p>On top of that, I had to design a system of representing the game world. When working with phaser, it is pretty easy to just make a sprite for the player, and even include the player's hp as a field in that object. here I had to make every type from scratch. This includes Items, Inventories, Creatures, and WorldChunks. Those four make up the majority of interactions in the world.</p>
+<p>But how to have the player interact? I had to design a way to parse a sentance looking for specific verbs, even potentally large numbers of them, and take the appropreate action. This turned out to be a distinct challenge.</p>
 </li>
 
 <li><strong>Prototype Postmortem:</strong>
 Q: What did you learn from this prototype?
 What was the easiest or hardest part of making it? <br>
-A: 
+A: <p>As far as learning, I decided that there are many unique difficulties to building a game like this, namely, parsing natural language. It was far more challenging than I expected. </p>
+<p>The hardest part has been designing the nesecary data structures and classes, and writing all their support functions, that get used by the actual actions that players take. Over 500 lines of code (almost half in the project) is dedicated to these data structures, while around 300 lines define the actual actions the player can take. (which too were a massive challenge)</p>
 </li>
 
 <li><strong>Prototype Assets:</strong>
 Q: Did you make your prototype assets from scratch? Did you borrow them? Cite your sources here.
-<ul>
-
-</ul>
+<br>A: There are no assets in this game.
 </li>
 
 <li><strong>Prototype Closest Other Game:</strong>
 Q: Which other game most closely resembles your game? If you are borrowing code from a Phaser Example, you must say so here. If you borrow code from elsewhere, you must say so here.<br>
-A: 
+A: Well, there is nothing to compare this to here. I wrote Everything from scratch. Literally every line of code. And I did not reference any body of code for it!
 </li>
 
-<li><strong>High Concept:</strong>
+<li><strong>High Concept:</strong> Imagine yourself in a world,and control the character though text-based gameplay.
 </li>
 
-<li><strong>Theme:</strong>
+<li><strong>Theme:</strong> I did not use a theme.
 </li>
 
 <li><strong>Mandated Variety:</strong>
 <ul>
 <li>Input:Keyboard</li>
 <li>Randomness: Lots</li>
-<li>Play Style:</li>
-<li>Gnere:</li>
+<li>Play Style: Explorer</li>
+<li>Gnere: Text-Based</li>
 </ul>
 </li>
 
-<li><strong>Prototype Goal:</strong>
+<li><strong>Prototype Goal:</strong> Can I even make this? Will it be fun? What are the challenges of this type of game?
 </li>
 
-<li><strong>Player Experience Goals:</strong>
+<li><strong>Player Experience Goals:</strong> Not sure. Finding this out is part of the point of the prototype. I have very little idea what to expect.
 </li>
 
-<li><strong>Gameplay:</strong>
+<li><strong>Gameplay:</strong> Type in imperitive sentances and get results.
 </li>
 
-<li><strong>Strategies:</strong>
+<li><strong>Strategies:</strong> Draw your sword quickly!
 </li>
 
-<li><strong>Story/Setting/Premise:</strong>
+<li><strong>Story/Setting/Premise:</strong> I'm working on this. Hopefully done by Version 2 next week!
 </li>
 
-<li><strong>Target Audience:</strong>
+<li><strong>Target Audience:</strong> You.
 </li>
 
-<li><strong>Play Time:</strong>
+<li><strong>Play Time:</strong> However long you want until you die.
 </li>
 
 </ul>
 </div>
+
 
 <script src="js/main.js"></script>
 </body>
