@@ -315,8 +315,8 @@ class Inventory{
         var s = "";
         for(let i=0;i<this.items.length;i++){
             s += this.items[i].toString();
-            if (i+i < this.items.length){
-                s += "<br>";
+            if (i+1 < this.items.length){
+                s += "\n";
             }
         }
         return s
@@ -353,6 +353,7 @@ class Creature{
         this.heldIndex = -1; //nothing held
         this.lastAttacker = null;
         this.flags = (valid(flags)?flags:{});
+        this.isPlayer = false;
     }
     //BEGIN Creature Contents
     equals(other){
@@ -426,6 +427,16 @@ class Creature{
             console.log("here")
             print("" + attack.attacker.name + " attacked " + this.name + " with " + attack.text + " for " + attack.dmg + " damage.");
             if (this.hp <= 0){
+                if (attack.attacker.isPlayer){
+                    player.xp += player.xpPerKill;
+                    if (player.xp >= player.maxXP){
+                        //PLAYER LEVEL UP!
+                        player.level++;
+                        player.hp = player.getMaxHP();
+                        player.ac = 10 + player.level;
+                        player.xp = 0;
+                    }
+                }
                 this.die();
             }
         }else{
@@ -462,10 +473,10 @@ class Creature{
     }
     toString(){
         let s = "Name: "+this.name + "\tLevel: " + this.level + "" +
-            "<br>HP: "+ this.hp + "\tAC: "+ this.ac +
-            "<br>Stats: STR: "+ this.stats.STR + 
+            "\nHP: "+ this.hp + "\tAC: "+ this.ac +
+            "\nStats: STR: "+ this.stats.STR + 
             "\tDEX: " + this.stats.DEX + "\tCON: " + this.stats.CON +
-            "<br>Inventory: " + this.inventory.toString();
+            "\nInventory:\n" + this.inventory.toString();
         return s;
     }
     //END Creature Contents
@@ -561,10 +572,9 @@ class WorldChunk{
     
     getRandomEnemy(){
         let name = choose(ENEMY_NAME_LIST);
-        let level = player.level;
-        if (Math.random() > 0.5){level = Math.max(level-1, 1);}
+        let level = rand(1,player.level);
         let hp = level*20;
-        hp = rand(hp/2, hp);
+        hp = rand(hp/4, hp);
         let ac = 10 + rand(level/2, level);
         let c = new Creature(
             name, 
@@ -584,7 +594,7 @@ class WorldChunk{
     getRandomWeapon(){
         let n = choose(MELEE_WEAPON_NAME_LIST);
         let item = new Item(n, 1);
-        item.setFlag("damage", rand(3, 10));
+        item.setFlag("damage", rand(3, 8));
         return item;
     }
     
@@ -631,6 +641,8 @@ class WorldChunk{
 
 //BEGIN Global Stuff
 
+const HELP_STR = "Commands are phrased as basic imperitive sentances, such as <b>go north</b>. There are a number of verbs that are recognized, namely:<ul><li><b>go, move, walk, travel</b> for movement.</li><li><b>look, examine, perceive, view, find, search</b> for looking around and searching.</li><li><b>take, pickup, pick, grab, gather</b> for collecting items</li><li><b>draw, hold</b> for selecting the wielded item</li><li><b>attack, hit</b> for attacking enemies</li><li><b>use, eat, burn, ignite, light</b> for using and consuming items</li><li><b></b></li></ul>Besides these, there are a few special commands, prefixed with a \"!\". Some of these are for development debug, others are for players.<ul><li><b>!help</b>  prints this help message.</li><li><b>!clean</b> and <b>!clear</b> clear the screen</li><li><b>!name [newname]</b> sets the player name</li><li><b>!whoami</b> prints the player's information</li><li><b>!inv</b> and <b>!inventory</b> prints the player's inventory</li><li><b>!details</b> prints the details of the enviroment. This is intended for debugging.</li><li><b>!battle</b> prints the battlefield, as if combat was underway. It is intended for debugging.</li></ul>";
+
 //BEGIN player
 let player = new Creature(
     "Burk", 
@@ -643,6 +655,10 @@ let player = new Creature(
         CON: Math.floor(Math.random()*4)+2,
     }
 )
+player.xp = 0;
+player.maxXP = 2;
+player.xpPerKill = 1;
+player.isPlayer = true;
 {
     //scope so these are not global
     let sword = new Item("sword", 1);
@@ -1011,11 +1027,11 @@ const dictActions = {
 
 //builtins
 const dictBuiltings = {
-    help: function(args){print("SORRY! not implemented.");return;},
+    help: function(args){print(HELP_STR);return;},
     clean:function(args){DIV.innerHTML = "";print(">>clean");},
     clear: function(args){DIV.innerHTML = "";print(">>clear");},
     name: function(args){player.name = args[1];print("Name Changed");},
-    whoami: function(args){print(player.toString());},
+    whoami: function(args){print(player.toString() + "\nEXP: " + player.xp);},
     inv: function(args){print(player.inventory.toString());},
     inventory: function(args){print(player.inventory.toString());},
     details: function(args){
@@ -1031,13 +1047,6 @@ const dictBuiltings = {
         s += "<br> Items:<br>"+ (CURRENT_WORLDCHUNK.inventory.toString());
         
         s += "\n BATTLEFIELD: " + BATTLEFIELD.toString();
-        print(s);
-    },
-    rand: function(args){
-        let s = ""
-        for(let i=0;i<50;i++){
-            s += " "+rand(1, 5)
-        }
         print(s);
     },
     battle: function(args){displayCombatBoard();}
