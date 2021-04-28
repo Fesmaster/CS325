@@ -1,24 +1,29 @@
 //BEGIN basic stuff
 const DIV = document.getElementById('game');
+let OUT_LEN = 0;
+const OUT_LEN_MAX = 15;
+function validateOutputSize(){
+    while (OUT_LEN > OUT_LEN_MAX){
+        OUT_LEN--;
+        let s = DIV.innerHTML.search("</p>") + 4;
+        DIV.innerHTML = DIV.innerHTML.slice(s);
+    }
+}
 function print(text){
-    //t = text.replace(/\s[*][*]/g, " <b>");
-    //t = t.replace(/[*][*]\s/g, "</b> ");
-    //t = t.replace(/\s[*]/g, " <em>");
-    //t = t.replace(/[*]\s/g, "</em> ");
+    OUT_LEN++;
     let t = text.replace(/#C=/g, "<span style=\"color:");
     t = t.replace(/#C!/g, "</span>");
     t = t.replace(/#C/g, "\">");
     t = t.replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
     t = t.replace(/\n/g, "<br>");
     t = t.replace(/_/g, "&nbsp;");
-    //TODO: add length limits, removing elements by paragraph
-    //TODO: add parsing to allow auto-insert of span elements to color text
     DIV.innerHTML += ("<p>" + t + "</p>");
+    validateOutputSize();
 }
 print("Beginning game ... ");
 function findword(args, word, startindex){
     if (startindex === undefined){startindex=0;}
-    for(let i=startindex;i<args.length;i++){
+    for(let i=startindex; i<args.length; i++){
         if (args[i] === word){
             return i;
         }
@@ -106,6 +111,10 @@ function USE_VOID_FUNC(item, user){
 function USE_EAT_FUNC(item, user){
     let hp = item.getFlag("healing");
     if (hp !== undefined){
+        if (user.hp === user.getMaxHP()){
+            print("You are already at full health!");
+            return;
+        }
         hp += user.hp;
         if (hp > user.getMaxHP()){
             hp = user.getMaxHP();
@@ -148,6 +157,7 @@ class Item{
         return objEqual(this.flags, other.flags);
     }
     getFlag(flag){
+        if (!valid(flag)){return true;} //if not a valid flag, return true
         if (this.flags[flag] !== undefined && this.flags[flag] !== null){
             return this.flags[flag];
         }else{
@@ -179,6 +189,22 @@ class Item{
         console.log(this);
         return this.use_func(this, user);
     }
+    enhance(user){
+        let damage = this.getFlag("damage");
+        if (valid(damage)){
+            if (user.inventory.getCount("wood") < 1 || user.inventory.getCount("stone") < 1){
+                print(user.name + " does not have enough wood and stone to enhance " + this.name + "!");
+                return false;
+            }
+            user.inventory.takeItem("wood", 1);
+            user.inventory.takeItem("stone", 1);
+            this.setFlag("damage", damage+1);
+            print(user.name + " enhanced " + this.name);
+        }else{
+            print(this.name + " cannot be enhanced!");
+            return false;
+        }
+    }
     setUseFunction(func){
         if (typeof func === "function"){
             this.use_func = func;
@@ -202,7 +228,7 @@ class Inventory{
         this.items = [];
     }
     //BEGIN Inventory Contents
-    getCount(name){
+    getCount(name, flag){
         //get the name from item if item is passed
         if (typeof name === "object"){
             name = name.name;
@@ -210,7 +236,13 @@ class Inventory{
         let c = 0;
         for(let i=0;i<this.items.length;i++){
             if (this.items[i].name === name){
-                c += this.items[i].count;
+                if (!valid(flag)){
+                    c += this.items[i].count;
+                }else{
+                    if(valid(this.items[i].getFlag(flag))){
+                        c += this.items[i].count;
+                    }
+                }
             }
         }
         return c;
@@ -236,7 +268,7 @@ class Inventory{
         }
         this.items.push(item);
     }
-    takeItem(name, count){
+    takeItem(name, count, flag){
         //get the name from item if item is passed
         if (typeof name === "object"){
             name = name.name;
@@ -244,7 +276,7 @@ class Inventory{
         let currHiCount = 0;
         let currHiIndex = -1;
         for(let i=0;i<this.items.length;i++){
-            if (this.items[i].name === name){
+            if (this.items[i].name === name && valid(this.items[i].getFlag(flag))){
                 if (this.items[i].count == count){
                     //remove this item
                     let p = removeIndex(this.items, i);
@@ -473,10 +505,10 @@ class Creature{
     }
     toString(){
         let s = "Name: "+this.name + "\tLevel: " + this.level + "" +
-        "\nHP: "+ this.hp + "\tAC: "+ this.ac +
-        "\nStats: STR: "+ this.stats.STR + 
-        "\tDEX: " + this.stats.DEX + "\tCON: " + this.stats.CON +
-        "\nInventory:\n" + this.inventory.toString();
+            "\nHP: "+ this.hp + "\tAC: "+ this.ac +
+            "\nStats: STR: "+ this.stats.STR + 
+            "\tDEX: " + this.stats.DEX + "\tCON: " + this.stats.CON +
+            "\nInventory:\n" + this.inventory.toString();
         return s;
     }
     //END Creature Contents
@@ -490,17 +522,40 @@ for(let x = 0;x<128;x++){
 let CURRENT_WORLDCHUNK = null;
 
 const ENVIROMENT_LIST = [
-"flatlands", 
-"hills", 
-"mountains", 
-"wetlands", 
-"tundra", 
-"desert", 
-"savana", 
-"lakeshore"
+    "flatlands", 
+    "hills", 
+    "mountains", 
+    "wetlands", 
+    "tundra", 
+    "desert", 
+    "savana", 
+    "lakeshore"
 ];
 const ENEMY_NAME_LIST = ["skeleton", "goblin", "bandit", "brigand", "jelly", "kobald", "gnoll", "spirit", "disaster-on-legs"];
 const MELEE_WEAPON_NAME_LIST = ["spear", "sword", "axe", "knife", "dagger", "broadsword", "rapier", "claymore", "dirk", "greataxe", "greatsword", "pike", "halberd"];
+const RANGED_WEAPON_NAME_LIST = ["shortbow", "sling", "longbow", "crossbow", "dartgun", "boltcaster"];
+
+let INTEREST_POINTS = [
+    "There is a hill with two peaks, a lone pine tree growing on one, a large bolder on the other.",
+    "A brook sparkles in the sunlight, and presently flows over a cliff making a majestic waterfall.",
+    "A large standing stone covered with mysterious runes reminds you of a bygone age.",
+    "A pile of boulders looks mysteriously like a large fist rising from the ground.",
+    "A rough circle of moss-covered stones marks the site of an ancient ritual grounds.",
+    "A half-burned palisade fort reminds you of the troubles of the land.",
+    "A large, fresh crater in the ground indicates wizardry in the area. Or angery moles.",
+    "The massive, frozen carcass of a spider, nearly five feet tall, stuns you. It does not seem to be melting.",
+    "As you walk along, you realize you are following an ancient paved road, long since lost to time, only this section still in tact, though covered with dirt and debris.",
+    "Thick mists cover the land, and many small hills make you think of barrows and burial mounds.",
+    "A large hill with a ruined tower atop stand as a reminder to the elvish emipre that once ruled these lands.",
+    "A natural freshwater pool forms a perfect mirror, and, at night, reflects the moon like nothing you have seen. It positively glows!",
+    "A trail of torn-up ground catches your attention, and, following it, you find the rotting carcass of a large boar, seeming to have died in battle. The victor does not seem to be around.",
+    "You find an arrow stuck in the ground, no rust or weathering, but no owner around.",
+    "A massive quartz crystal forms a natural outcropping, sticking nearly nine feet out of the ground and around three in diameter. You don't know how deep it goes. Smaller ones surround it, making it look like a nest.",
+    "You come across an area where a number of bolders float in the air. They resist being pushed around and spun, but they do not fall, nor are they supported by anything invisible.",
+    "You find a standing stone surrounded by smaller ones, in an open area. Butterflies and other insects fly around them. Try as you might, you cannot move past the ring of smaller stones.",
+    "You come across a large statue of a man with a horned helmet and a large, double-bit axe. The statue is carved from a hard rock and is twenty feet tall.",
+    "",
+];
 //END world
 
 class WorldChunk{
@@ -521,7 +576,7 @@ class WorldChunk{
             rocks: chance(2),
             herbs: chance(3),
             animals: chance(3),
-            structures: chance(7),
+            intrest: chance(5),
             enemies: chance(8)
         }
         //specific filtering
@@ -556,7 +611,7 @@ class WorldChunk{
         }
         
         if (this.features.enemies){
-            //if (true){
+        //if (true){
             let s = rand(1, 4);
             for (let i=0;i<s;i++){
                 this.creatures.push(this.getRandomEnemy());
@@ -566,10 +621,21 @@ class WorldChunk{
         //END creatures
         //TODO: More Generation!!!
         
+        //BEGIN intrest
+        this.interest = ""
+        if (this.features.intrest && INTEREST_POINTS.length > 0){
+            let index = Math.floor(Math.random() * INTEREST_POINTS.length);
+            this.interest = INTEREST_POINTS[index];
+            removeIndex(INTEREST_POINTS, index);
+        }
+        else if (this.features.interest){
+            console.log("No more features to add")
+        }
+        //END intrest
+        
         //send to the WORLD global
         WORLD[px][py] = this;
     }
-    
     getRandomEnemy(){
         let name = choose(ENEMY_NAME_LIST);
         let level = rand(1,player.level);
@@ -582,7 +648,7 @@ class WorldChunk{
             ac, 
             level, 
             {STR:rand(1, 4),DEX:rand(1, 4),CON:rand(1, 4)},
-                             {hostile:true}
+            {hostile:true}
         )
         let item = this.getRandomWeapon();
         c.inventory.addItem(item);
@@ -590,14 +656,20 @@ class WorldChunk{
         c.heldIndex = index;
         return c;
     }
-    
     getRandomWeapon(){
         let n = choose(MELEE_WEAPON_NAME_LIST);
+        let ranged = false;
+        if (Math.random() > 0.5){
+            n = choose(RANGED_WEAPON_NAME_LIST);
+            ranged = true;
+        }
         let item = new Item(n, 1);
         item.setFlag("damage", rand(3, 8));
+        if (ranged){
+            item.setFlag('weaponRanged', true);
+        }
         return item;
     }
-    
     toString(){
         let s = "An area of " + this.enviroment;
         if (this.features.trees || this.features.rocks){
@@ -628,12 +700,48 @@ class WorldChunk{
             }
             s += "."
         }
-        
+        s += "\n\t" + this.interest; //interest points
         if (this.inventory.items.length !== 0){
-            s += "<br>You spot some items in the area:<br>" + this.inventory.toString();
+            s += "\nYou spot some items in the area:\n" + this.inventory.toString();
         }
         
         return s;
+    }
+}
+
+let CRAFTS = {};
+class Craft{
+    constructor(result, recpie){
+        if (!valid(result) || !valid(recpie)){
+            console.log("ERROR: invalid result/recpie in craft!");
+            return;
+        }
+        if (valid(CRAFTS[result])){
+            console.log("ERROR: cannot have two recipes with same result!")
+            return;
+        }
+        if (typeof result === "string"){
+            result = new Item(result, 1);
+        }
+        this.result = result;
+        this.recpie = recpie;
+        CRAFTS[result.name] = this;
+    }
+    execute(){
+        //first, see if we CAN execute
+        for (let i=0;i<this.recpie.length;i++){
+            if (player.inventory.getCount(this.recpie[i]) <= 0){
+                return false;
+            }
+        }
+        //remove items from player inv
+        for (let i=0;i<this.recpie.length;i++){
+            player.inventory.takeItem(this.recpie[i], 1);
+        }
+        //clone result into player inv
+        player.inventory.addItem(this.result.clone());
+        print("You crafted a " + this.result.name + ".");
+        return true;
     }
 }
 
@@ -641,7 +749,31 @@ class WorldChunk{
 
 //BEGIN Global Stuff
 
-const HELP_STR = "Commands are phrased as basic imperitive sentances, such as <b>go north</b>. There are a number of verbs that are recognized, namely:<ul><li><b>go, move, walk, travel</b> for movement.</li><li><b>look, examine, perceive, view, find, search</b> for looking around and searching.</li><li><b>take, pickup, pick, grab, gather</b> for collecting items</li><li><b>draw, hold</b> for selecting the wielded item</li><li><b>attack, hit</b> for attacking enemies</li><li><b>use, eat, burn, ignite, light</b> for using and consuming items</li><li><b></b></li></ul>Besides these, there are a few special commands, prefixed with a \"!\". Some of these are for development debug, others are for players.<ul><li><b>!help</b>  prints this help message.</li><li><b>!clean</b> and <b>!clear</b> clear the screen</li><li><b>!name [newname]</b> sets the player name</li><li><b>!whoami</b> prints the player's information</li><li><b>!inv</b> and <b>!inventory</b> prints the player's inventory</li><li><b>!details</b> prints the details of the enviroment. This is intended for debugging.</li><li><b>!battle</b> prints the battlefield, as if combat was underway. It is intended for debugging.</li></ul>";
+//BEGIN Help String
+const HELP_STR = "Commands are phrased as basic imperitive sentances, such as <b>go north</b>, <b>attack disaster-on-legs</b>, or <b>find food</b>. There are a number of verbs that are recognized, namely:<ul><li><b>go, move, walk, travel</b> for movement.</li><li><b>look, examine, perceive, view, find, search</b> for looking around and searching.</li><li><b>take, pickup, pick, grab, gather</b> for collecting items</li><li><b>draw, hold</b> for selecting the wielded item</li><li><b>attack, hit</b> for attacking enemies</li><li><b>use, eat, burn, ignite, light</b> for using and consuming items</li><li><b>craft, make, build</b> for crafting items. There are two items that can be crafted: trap and steak</li><li><b>enhance, upgrade, repair, fix</b> for upgrading weapons</li><li><b>drop, place</b> for removing items from your inventory</li></ul>Besides these, there are a few special commands, prefixed with a \"!\". Some of these are for development debug, others are for players.<ul><li><b>!help</b> prints this help message.</li><li><b>!clean</b> and <b>!clear</b> clear the screen</li><li><b>!name [newname]</b> sets the player name</li><li><b>!whoami</b> prints the player's information</li><li><b>!inv</b> and <b>!inventory</b> prints the player's inventory</li><li><b>!details</b> prints the details of the enviroment. This is intended for debugging.</li><li><b>!battle</b> prints the battlefield, as if combat was underway. It is intended for debugging.</li></ul>";
+//END Help String
+
+//BEGIN crafting recipes
+{
+    let trap = new Item("trap", 1, undefined, undefined, undefined, {consumable:true});
+    trap.setUseFunction(function(item, user){
+        let usedItem = item.clone();
+        usedItem.count = 1;
+        usedItem.setFlag("trapSet", true);
+        CURRENT_WORLDCHUNK.inventory.addItem(usedItem);
+        print("You set and bait the trap");
+        return item.count - 1;
+    })
+    let steak = new Item("steak", 1, undefined, undefined, undefined, {healing:20, edible:true});
+    steak.setUseFunction(USE_EAT_FUNC);
+    
+    new Craft(trap,["wood", "stone"])
+    new Craft(steak,["herbs", "meat"])
+}
+let MEAT_TEMPLATE = new Item("meat", 1, undefined, undefined, undefined, {healing:5, edible:true});
+MEAT_TEMPLATE.setUseFunction(USE_EAT_FUNC);
+
+//END crafting recipes
 
 //BEGIN player
 let player = new Creature(
@@ -651,8 +783,8 @@ let player = new Creature(
     1,
     {
         STR: Math.floor(Math.random()*4)+2,
-                          DEX: Math.floor(Math.random()*4)+2,
-                          CON: Math.floor(Math.random()*4)+2,
+        DEX: Math.floor(Math.random()*4)+2,
+        CON: Math.floor(Math.random()*4)+2,
     }
 )
 player.xp = 0;
@@ -710,7 +842,6 @@ const dictFindables = {
 
 //BEGIN game progression constants
 
-let __HAS_MOVED = false;
 
 //END game progression constants
 
@@ -750,6 +881,15 @@ function moveToWorldChunk(x, y){
         COMBAT_MODE = true;
         NEW_COMBAT = true;
         print("#C=#FF0000#CEnemies are around you. You are in Combat!#C!")
+    }
+    if (CURRENT_WORLDCHUNK.inventory.items.length > 0 && CURRENT_WORLDCHUNK.features.animals){
+        let count = CURRENT_WORLDCHUNK.inventory.getCount("trap", "trapSet");
+        if (count > 0){
+            CURRENT_WORLDCHUNK.inventory.takeItem("trap", count, "trapSet");
+            let meat = MEAT_TEMPLATE.clone();
+            meat.count = count;
+            CURRENT_WORLDCHUNK.inventory.addItem(meat);
+        }
     }
 }
 //END world funcs
@@ -796,12 +936,6 @@ function executeEnemyTurn(){
 //END combat funcs
 
 //BEGIN actions
-/* Command ideas:
- * interaction with objects (take, drop, examine, use)
- * attack
- * recall (prophecy)
- * craft
- */
 
 //movement
 function move(args, startindex){
@@ -827,10 +961,6 @@ function move(args, startindex){
         }
     }
     print(s + ".");
-    if (!__HAS_MOVED){
-        __HAS_MOVED = true;
-        print("As you walk, you <b>recall</b> the prophecy you had heard, the fate that waites for you.")
-    }
 }
 
 //looking
@@ -995,32 +1125,52 @@ function use(args, startindex){
     }
 }
 
+function craft(args, startindex){
+    for(let i=startindex+1; i<args.length;i++){
+        let craft = CRAFTS[args[i]];
+        if (valid(craft)){
+            craft.execute();
+        }
+    }
+}
+
+function upgrade(args, startindex){
+    for(let i=startindex+1;i<args.length;i++){
+        let item = player.inventory.getItem(args[i]);
+        if (valid(item)){
+            item.enhance(player);
+        }
+    }
+}
+
+function drop(args, startindex){
+    let p = "";
+    for(let i=startindex+1;i<args.length;i++){
+        let count = player.inventory.getCount(args[i]);
+        if (count > 0){
+            let item = player.inventory.takeItem(args[i], count);
+            CURRENT_WORLDCHUNK.inventory.addItem(item);
+            p += item.name + ":" + item.count;
+            if (i+1 < args.length){
+                p +=", ";
+            }
+        }
+    }
+    print("Dropped Items: "+p);
+}
+
 //action dictionary
 const dictActions = {
-    go: move,
-    move: move,
-    walk: move,
-    travel: move,
-    look: look,
-    examine: look,
-    perceive: look,
-    view: look,
-    find: find,
-    search: find,
-    take: take,
-    pickup: take,
-    pick: take,
-    grab: take,
-    gather: take,
-    draw: draw,
-    hold: draw,
-    attack: attack,
-    hit: attack,
-    use: use,
-    eat: use,
-    burn: use,
-    ignite: use,
-    light: use
+    go: move, move: move, walk: move, travel: move,
+    look: look, examine: look, perceive: look, view: look,
+    find: find, search: find,
+    take: take, pickup: take, pick: take, grab: take, gather: take,
+    draw: draw, hold: draw,
+    attack: attack, hit: attack,
+    use: use, eat: use, burn: use, ignite: use, light: use, set: use,
+    craft: craft, make: craft, build: craft,
+    enhance: upgrade, upgrade: upgrade, repair: upgrade, fix: upgrade,
+    drop: drop, place: drop,
 }
 
 //END actions
@@ -1038,18 +1188,38 @@ const dictBuiltings = {
         let s = CURRENT_WORLDCHUNK.toString();
         s += " at {" + CURRENT_WORLDCHUNK.coords.x + ", " + CURRENT_WORLDCHUNK.coords.y + "}"
         s += "<br> Features:"+
-        "<br>Trees:" + CURRENT_WORLDCHUNK.features.trees + 
-        "<br>Rocks:"+ CURRENT_WORLDCHUNK.features.rocks +
-        "<br>Herbs:" + CURRENT_WORLDCHUNK.features.herbs +
-        "<br>Animals: "+ CURRENT_WORLDCHUNK.features.animals +
-        "<br>Structures: "+ CURRENT_WORLDCHUNK.features.structures;
+            "<br>Trees:" + CURRENT_WORLDCHUNK.features.trees + 
+            "<br>Rocks:"+ CURRENT_WORLDCHUNK.features.rocks +
+            "<br>Herbs:" + CURRENT_WORLDCHUNK.features.herbs +
+            "<br>Animals: "+ CURRENT_WORLDCHUNK.features.animals +
+            "<br>Point of Interest: "+ CURRENT_WORLDCHUNK.features.intrest;
         
         s += "<br> Items:<br>"+ (CURRENT_WORLDCHUNK.inventory.toString());
         
         s += "\n BATTLEFIELD: " + BATTLEFIELD.toString();
         print(s);
     },
-    battle: function(args){displayCombatBoard();}
+    battle: function(args){displayCombatBoard();},
+    newitem: function(args){
+        if (args.length < 2){
+            return
+        }
+        let item = new Item(args[1]);
+        
+        for(let i=2;i<args.length;i+=2){
+            let f = args[i];
+            let v = args[i+1];
+            if (v === "true"){ v = true;}
+            if (v === "false"){ v = false;}
+            if (!isNaN(parseFloat(v))){v = parseFloat(v);}
+            item.setFlag(f, v);
+        }
+        
+        player.inventory.addItem(item);
+    },
+    crafts: function(args){
+        console.log(CRAFTS);
+    },
 }
 
 //this function is called from the HTML page events. Well, indirectly!
@@ -1102,7 +1272,6 @@ function recieve_command(command){
         print("#C=#FF0000#CYou Have Died!#C!\nRefresh the page to play again!");
     }
 }
-
 
 //down here so everything else is defined
 //CURRENT_WORLDCHUNK = getWorldChunk(64, 64);

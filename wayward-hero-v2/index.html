@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Wayward Hero</title>
+<style>
+body{color: #777; font-family: "Avenir", Verdana, sans-serif;}
+.terminal{
+    color:gainsboro;
+    background-color:#050505;
+    font-family: monospace;
+}
+#readme
+{
+    margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<div id="gamebox" class="terminal">
+<div id="game" class="terminal"></div>
+<div id="controls" class="terminal">
+<p><input type="text" name="command" size="128" maxlength="128" autofocus onkeypress="log(event)" class="terminal"></p>
+<script>
+function log(event){
+    var c = event.which || event.keyCode;
+    if (c == 13){
+        let doc = document.getElementsByName("command")[0]; //get the doc
+        recieve_command(doc.value.replace(/<[^>]+>/g, "")); //filter out html elements!
+        doc.value = "";
+    }
+}
+</script>
+</div>
+</div>
+
+<div id="readme">
+<h2>Wayward Hero</h2>
+
+<h4>Controls and Commands</h4>
+Commands are phrased as basic imperitive sentances, such as <b>go north</b>, <b>attack disaster-on-legs</b>, or <b>find food</b>. There are a number of verbs that are recognized, namely:
+<ul>
+<li><b>go, move, walk, travel</b> for movement.</li>
+<li><b>look, examine, perceive, view, find, search</b> for looking around and searching.</li>
+<li><b>take, pickup, pick, grab, gather</b> for collecting items</li>
+<li><b>draw, hold</b> for selecting the wielded item</li>
+<li><b>attack, hit</b> for attacking enemies</li>
+<li><b>use, eat, burn, ignite, light</b> for using and consuming items</li>
+<li><b>craft, make, build</b> for crafting items. There are two items that can be crafted: trap and steak</li>
+<li><b>enhance, upgrade, repair, fix</b> for upgrading weapons</li>
+<li><b>drop, place</b> for removing items from your inventory</li>
+</ul>
+Besides these, there are a few special commands, prefixed with a "!". Some of these are for development debug, others are for players.
+<ul>
+<li><b>!help</b> prints this help message.</li>
+<li><b>!clean</b> and <b>!clear</b> clear the screen</li>
+<li><b>!name [newname]</b> sets the player name</li>
+<li><b>!whoami</b> prints the player's information</li>
+<li><b>!inv</b> and <b>!inventory</b> prints the player's inventory</li>
+<li><b>!details</b> prints the details of the enviroment. This is intended for debugging.</li>
+<li><b>!battle</b> prints the battlefield, as if combat was underway. It is intended for debugging.</li>
+</ul>
+
+
+<h3>The Questions:</h3>
+<ul>
+<li><strong>Originality:</strong>
+Q: What is original about your game?<br>
+A: That is an interesting question. This game is a challenge, to me, the maker, to try and make somthing fun and interesting using a severely limited interaction system, trying to emulate the old days before graphics were a common part of computers. So, mechanics-wise, there is nothing fantastically original. However, for this class and for most games made nowadays, this is a completely original game, its rare to see a game with absolutely no graphics today. In fact, I can't even think of an example. The closest thing I have to graphics is colored text!
+</li>
+
+<li><strong>Technical Merit:</strong>
+Q: What is interesting about your game technology?<br>
+A: <p>This game has been a technical challenge from beginning to end. As of me writing this, it is matching my previous game at over 1200 lines of code (and counting!). Without Phaser or any other engine to back me up, this project has truely been written from scratch. All the interaction is using the manipulation of the contents of a div in the HTML of the page, inserting paragraphs and spans.</p>
+<p>And that does not even bring me to the more difficult and interesting parts. I had to write a massive ammount of support code, from functions to remove an index in an array without leaving a hole, to random choice utilities.</p>
+<p>On top of that, I had to design a system of representing the game world. When working with phaser, it is pretty easy to just make a sprite for the player, and even include the player's hp as a field in that object. here I had to make every type from scratch. This includes Items, Inventories, Creatures, and WorldChunks. Those four make up the majority of interactions in the world.</p>
+<p>But how to have the player interact? I had to design a way to parse a sentance looking for specific verbs, even potentally large numbers of them, and take the appropreate action. This turned out to be a distinct challenge.</p>
+For version 2:
+<p>One of the big things, both of the first version and even moreso of the second is the modularity of it all. It is possible to add completely new and unknown items at runtime, however, they can only have default behavior. It is possible to add new crafts, new creatures, etc. all without changing the code. Granted, there is no system to do so, but the modularity of the system allows it to happen. Its even possible, with a few more lines of code, to add a way for the player to fight a clone of themselves! All the mechanics for that are there, as nothing differenciates the player and the enemies in terms of data structure.</p>
+</li>
+
+<li><strong>Prototype Postmortem:</strong>
+Q: What did you learn from this prototype?
+What was the easiest or hardest part of making it? <br>
+A: <p>As far as learning, I decided that there are many unique difficulties to building a game like this, namely, parsing natural language. It was far more challenging than I expected. </p>
+<p>The hardest part has been designing the nesecary data structures and classes, and writing all their support functions, that get used by the actual actions that players take. Over 500 lines of code (almost half in the project) is dedicated to these data structures, while around 300 lines define the actual actions the player can take. (which too were a massive challenge)</p>
+For version 2:
+<p>This was more of the same, a lot of work to build all the parts. I added crafting and enhancing of weapons, which makes the game more blanced in favor of the player. For the most part, this was utilizing the systems I already made and the versatility of the data structures I built last week.</p>
+</li>
+
+<li><strong>Prototype Assets:</strong>
+Q: Did you make your prototype assets from scratch? Did you borrow them? Cite your sources here.
+<br>A: There are no assets in this game.
+</li>
+
+<li><strong>Prototype Closest Other Game:</strong>
+Q: Which other game most closely resembles your game? If you are borrowing code from a Phaser Example, you must say so here. If you borrow code from elsewhere, you must say so here.<br>
+A: The closest other game is the first version of this! This is just a more complete prototype, as there is a lot to do here and the previous ammount of time I spent on it was not enought to actually finish everything I was trying to do. In reality, I probably could have spent the whole semester working on this game and still not have been done. Its a rather large idea, and can easily be scaled up. Starting now, the game's structure is now almost entirely complete, and tons of content could be added with almost no extra mechanics.
+</li>
+
+<li><strong>High Concept:</strong> Imagine yourself in a world,and control the character though text-based gameplay.
+</li>
+
+<li><strong>Theme:</strong> I did not use a theme.
+</li>
+
+<li><strong>Mandated Variety:</strong>
+<ul>
+<li>Input:Keyboard</li>
+<li>Randomness: Lots</li>
+<li>Play Style: Explorer</li>
+<li>Gnere: Text-Based</li>
+</ul>
+</li>
+
+<li><strong>Prototype Goal:</strong> Can I even make this? Will it be fun? What are the challenges of this type of game?
+</li>
+
+<li><strong>Player Experience Goals:</strong> Not sure. Finding this out is part of the point of the prototype. I have very little idea what to expect.<br>Update for version 2: From the test of version 1, people really liked the minimalist style and the exploration. If I had time, I would capitalize on this and add way cooler descriptions. I have made such generators before, but they take a lot of time and effort to build. I may do it yet, I am writing this on Monday, and I may forget to edit it if I do build it.
+</li>
+
+<li><strong>Gameplay:</strong> Type in imperative sentences and get results.
+</li>
+
+<li><strong>Strategies:</strong> Draw your sword quickly! Gather herbs, make traps, and make steaks. They heal for a lot. Also, upgrade your sword quickly too! Check your stats, if your DEX is higher than STR, take the first ranged weapon you find and upgrade that and use it as a primary.
+</li>
+
+<li><strong>Story/Setting/Premise:</strong> While this game was going to have a story, it has been scrapped in favor of more interesting exploration play, as that is what people liked. The story was not an interesting idea for them at all.
+</li>
+
+<li><strong>Target Audience:</strong> You.
+</li>
+
+<li><strong>Play Time:</strong> However long you want until you die.
+</li>
+
+</ul>
+</div>
+
+
+<script src="js/main.js"></script>
+</body>
+</html>
